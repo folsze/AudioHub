@@ -73,12 +73,18 @@ fun Album() {
     ) {
         Image(
             modifier = Modifier
-                .size(400.dp)
+                .size(300.dp)
                 .padding(top = 60.dp, bottom = 60.dp)
             ,
             painter = painterResource(id = R.drawable.album4),
             contentDescription = null
         )
+        Text(
+            text = "Album",
+            modifier = Modifier.fillMaxWidth(),
+            fontSize = 40.sp,
+        )
+
         val datasource = Datasource().loadAlbum1Songs()
         AudioList(datasource)
     }
