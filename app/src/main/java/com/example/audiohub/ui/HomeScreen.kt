@@ -15,8 +15,10 @@ private const val TAG = "HomeScreen"
 
 @Composable
 fun HomeScreen(
-    onAddAudioButtonClicked:  () -> Unit,
+    onAddAudioButtonClicked: () -> Unit,
+    onAddAlbumButtonClicked: () -> Unit,
     onViewAllAudiosButtonClicked: () -> Unit,
+    atLeastOneAlbumExists: Boolean,
 ) {
     Column(
         Modifier
@@ -30,16 +32,24 @@ fun HomeScreen(
             fontSize = 50.sp
         )
 
+        if (atLeastOneAlbumExists) {
+            Button(
+                onClick = onAddAudioButtonClicked,
+            ) {
+                Text("Add audio")
+            }
+        }
+
         Button(
-            onClick = onAddAudioButtonClicked,
+            onClick = onAddAlbumButtonClicked,
         ) {
-            Text("Add Audio")
+            Text("Add album")
         }
 
         Button(
             onClick = onViewAllAudiosButtonClicked,
         ) {
-            Text("Add Audio")
+            Text("View all audios")
         }
     }
 }

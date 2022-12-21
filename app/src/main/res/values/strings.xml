@@ -2,6 +2,7 @@
     <string name="app_name">AudioHub</string>
     <string name="allAudios">Playlist</string>
     <string name="album">Album</string>
-    <string name="audioForm">AudioForm</string>
+    <string name="audioForm">Audio Form</string>
     <string name="home">Home</string>
+    <string name="albumForm">Album Form</string>
 </resources>

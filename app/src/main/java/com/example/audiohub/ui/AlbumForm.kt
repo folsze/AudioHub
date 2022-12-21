@@ -11,61 +11,55 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.example.audiohub.model.Audio
+import com.example.audiohub.R
 import com.example.audiohub.model.Album
 
-private const val TAG = "AudioFormScreen"
+private const val TAG = "AlbumFormScreen"
 
 @Composable
-fun AudioFormScreen(
-    onAddAudio: (audio: Audio) -> Unit,
-    allAvailableAlbums: MutableList<Album>
+fun AlbumFormScreen(
+    onAddAlbum: (album: Album) -> Unit
 ) {
     Column (
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
         Text(
             modifier = Modifier.padding(bottom = 10.dp),
-            text = "Enter Song Details",
+            text = "Enter Album Details",
             fontSize = 40.sp
         )
-        AudioFormFields(
-            onAddAudio,
-            allAvailableAlbums
+        FormFields(
+            onAddAlbum
         )
     }
 }
 
 @OptIn(ExperimentalMaterialApi::class)
 @Composable
-fun AudioFormFields(
-    onAddAudio: (audio: Audio) -> Unit,
-    allAvailableAlbums: MutableList<Album>
+fun FormFields(
+    onAddAlbum: (album: Album) -> Unit
 ) {
-    var songName by remember { mutableStateOf(TextFieldValue("")) }
+    var albumName by remember { mutableStateOf(TextFieldValue("")) }
     TextField(
-        value = songName,
+        value = albumName,
         onValueChange = { newText ->
-            songName = newText
+            albumName = newText
         },
         label = {
-            Text("Song name")
+            Text("Album name")
         }
     )
 
-    var artistName by remember { mutableStateOf(TextFieldValue("")) }
-    TextField(
-        value = artistName,
-        onValueChange = { newText ->
-            artistName = newText
-        },
-        label = {
-            Text("Artist name")
-        }
+
+    val listItems = listOf(
+        Album("Album 1", R.drawable.album1),
+        Album("Album 2", R.drawable.album2),
+        Album("Album 3", R.drawable.album3),
+        Album("Album 4", R.drawable.album4),
     )
 
-    var selectedAlbum by remember {
-        mutableStateOf(allAvailableAlbums[0])
+    var selectedAlbumCover by remember {
+        mutableStateOf(listItems[0])
     }
     var expanded by remember {
         mutableStateOf(false)
@@ -80,10 +74,10 @@ fun AudioFormFields(
     ) {
         // text field
         TextField(
-            value = selectedAlbum.name,
+            value = selectedAlbumCover.name,
             onValueChange = {},
             readOnly = true,
-            label = { Text(text = "Album") },
+            label = { Text(text = "Label") },
             trailingIcon = {
                 ExposedDropdownMenuDefaults.TrailingIcon(
                     expanded = expanded
@@ -97,10 +91,10 @@ fun AudioFormFields(
             expanded = expanded,
             onDismissRequest = { expanded = false }
         ) {
-            allAvailableAlbums.forEach { selectedOption ->
+            listItems.forEach { selectedOption ->
                 // menu item
                 DropdownMenuItem(onClick = {
-                    selectedAlbum = selectedOption
+                    selectedAlbumCover = selectedOption
                     expanded = false
                 }) {
                     Row(
@@ -119,12 +113,13 @@ fun AudioFormFields(
         }
     }
 
+
     Button(
         onClick = {
-            onAddAudio(Audio(songName.text, artistName.text, selectedAlbum))
+            onAddAlbum(Album(albumName.text, selectedAlbumCover.coverImageResourceId))
             Log.i(TAG, "ADDED")
         }
     ) {
-        Text("Add to all audios")
+        Text("Add to all albums")
     }
 }

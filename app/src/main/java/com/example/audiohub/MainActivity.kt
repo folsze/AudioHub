@@ -13,6 +13,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.navigation.compose.NavHost
@@ -46,7 +47,8 @@ enum class AudioHubScreen(@StringRes val title: Int) {
     Home(title = R.string.home),
     AllAudios(title = R.string.allAudios),
     Album(title = R.string.album),
-    AudioForm(title= R.string.audioForm)
+    AudioForm(title = R.string.audioForm),
+    AlbumForm(title = R.string.albumForm)
 }
 
 @Composable
@@ -61,17 +63,12 @@ fun AudioHubApp(viewModel: AllAudiosViewModel = viewModel()) {
 
     Scaffold(
         topBar = {
-            TopAppBar(
-                title = {
-                    Text(text = "Audio Hub")
-                },
-                navigationIcon = {
-                    IconButton(onClick = {}) {
-                        Icon(Icons.Filled.ArrowBack, "backIcon")
-                    }
-                },
-                backgroundColor = MaterialTheme.colors.primary,
-                elevation = 10.dp
+            AudioHubAppBar(
+                currentScreen = currentScreen,
+                canNavigateBack = navController.previousBackStackEntry != null,
+                navigateUp = {
+                    navController.navigateUp()
+                }
             )
         }
     ) {
@@ -83,8 +80,12 @@ fun AudioHubApp(viewModel: AllAudiosViewModel = viewModel()) {
         ) {
             composable(route = AudioHubScreen.Home.name) {
                 HomeScreen(
+                    atLeastOneAlbumExists = uiState.albums.size > 0,
                     onAddAudioButtonClicked = {
                         navController.navigate(AudioHubScreen.AudioForm.name)
+                    },
+                    onAddAlbumButtonClicked = {
+                        navController.navigate(AudioHubScreen.AlbumForm.name)
                     },
                     onViewAllAudiosButtonClicked = {
                         navController.navigate(AudioHubScreen.AllAudios.name)
@@ -95,14 +96,13 @@ fun AudioHubApp(viewModel: AllAudiosViewModel = viewModel()) {
             }
             composable(route = AudioHubScreen.AudioForm.name) {
                 AudioFormScreen (
-                    navController = navController,
-                    onAddAudio = { viewModel.addAudio(it) }
+                    onAddAudio = { viewModel.addAudio(it) },
+                    allAvailableAlbums = uiState.albums
                 )
             }
             composable(route = AudioHubScreen.AllAudios.name) {
                 AllAudiosScreen(
-                    navController,
-                    allAudiosUiState = uiState
+                    audiosAndAlbumsUiState = uiState
                 )
             }
             composable(route = AudioHubScreen.Album.name) {
@@ -110,8 +110,41 @@ fun AudioHubApp(viewModel: AllAudiosViewModel = viewModel()) {
 
                 )
             }
+            composable(route = AudioHubScreen.AlbumForm.name) {
+                AlbumFormScreen(
+                    onAddAlbum = { viewModel.addAlbum(it) }
+                )
+            }
         }
     }
+}
+
+/**
+ * Composable that displays the topBar and displays back button if back navigation is possible.
+ */
+@Composable
+fun AudioHubAppBar(
+    currentScreen: AudioHubScreen,
+    canNavigateBack: Boolean,
+    navigateUp: () -> Unit,
+    modifier: Modifier = Modifier
+) {
+    TopAppBar(
+        title = { Text(stringResource(currentScreen.title)) },
+        modifier = modifier,
+        navigationIcon = {
+            if (canNavigateBack) {
+                IconButton(onClick = navigateUp) {
+                    Icon(
+                        imageVector = Icons.Filled.ArrowBack,
+                        contentDescription = null
+                    )
+                }
+            }
+        },
+        backgroundColor = MaterialTheme.colors.primary,
+        elevation = 50.dp
+    )
 }
 
 @Preview(showBackground = true)

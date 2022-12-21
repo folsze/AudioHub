@@ -1,10 +1,8 @@
 package com.example.audiohub.ui
 
-import android.util.Log
 import androidx.lifecycle.ViewModel
-import com.example.audiohub.R
-import com.example.audiohub.data.AllAudiosUiState
-import com.example.audiohub.data.Datasource
+import com.example.audiohub.data.AudiosAndAlbumsUiState
+import com.example.audiohub.model.Album
 import com.example.audiohub.model.Audio
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -14,23 +12,34 @@ import kotlinx.coroutines.flow.update
 private const val TAG = "CreateAudioViewModel"
 
 class AllAudiosViewModel : ViewModel() {
-    private val _uiState = MutableStateFlow(AllAudiosUiState())
-    val uiState: StateFlow<AllAudiosUiState> = _uiState.asStateFlow()
+    private val _uiState = MutableStateFlow(AudiosAndAlbumsUiState())
+    val uiState: StateFlow<AudiosAndAlbumsUiState> = _uiState.asStateFlow()
 
     fun addAudio(audio: Audio) {
         _uiState.update { currentState ->
-            currentState.copy(audios = newList(_uiState.value.audios, audio))
+            currentState.copy(audios = newAudioList(_uiState.value.audios, audio))
         }
     }
 
-    fun resetAudios() {
-        _uiState.value = AllAudiosUiState()
-    }
-
-    private fun newList(audios: MutableList<Audio>, audio: Audio): MutableList<Audio> {
+    private fun newAudioList(audios: MutableList<Audio>, audio: Audio): MutableList<Audio> {
         val newList = audios.toMutableList()
         newList.add(audio)
         return newList
     }
+    
+    fun resetAudios() {
+        _uiState.value = AudiosAndAlbumsUiState()
+    }
 
+    fun addAlbum(album: Album) {
+        _uiState.update { currentState ->
+            currentState.copy(albums = newAlbumList(_uiState.value.albums, album))
+        }
+    }
+
+    private fun newAlbumList(albums: MutableList<Album>, album: Album): MutableList<Album> {
+        val newList = albums.toMutableList()
+        newList.add(album)
+        return newList
+    }
 }
