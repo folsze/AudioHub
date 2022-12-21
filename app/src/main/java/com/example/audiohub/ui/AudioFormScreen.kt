@@ -11,6 +11,7 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.example.audiohub.R
 import com.example.audiohub.model.Audio
 import com.example.audiohub.model.Album
 
@@ -64,64 +65,9 @@ fun AudioFormFields(
         }
     )
 
-    var selectedAlbum by remember {
-        mutableStateOf(allAvailableAlbums[0])
-    }
-    var expanded by remember {
-        mutableStateOf(false)
-    }
-
-    // the box
-    ExposedDropdownMenuBox(
-        expanded = expanded,
-        onExpandedChange = {
-            expanded = !expanded
-        }
-    ) {
-        // text field
-        TextField(
-            value = selectedAlbum.name,
-            onValueChange = {},
-            readOnly = true,
-            label = { Text(text = "Album") },
-            trailingIcon = {
-                ExposedDropdownMenuDefaults.TrailingIcon(
-                    expanded = expanded
-                )
-            },
-            colors = ExposedDropdownMenuDefaults.textFieldColors()
-        )
-
-        // menu
-        ExposedDropdownMenu(
-            expanded = expanded,
-            onDismissRequest = { expanded = false }
-        ) {
-            allAvailableAlbums.forEach { selectedOption ->
-                // menu item
-                DropdownMenuItem(onClick = {
-                    selectedAlbum = selectedOption
-                    expanded = false
-                }) {
-                    Row(
-                        Modifier.fillMaxWidth(),
-                        horizontalArrangement = Arrangement.SpaceBetween
-                    ) {
-                        Text(text = selectedOption.name)
-                        Image(
-                            modifier = Modifier.size(40.dp),
-                            painter = painterResource(id = selectedOption.coverImageResourceId),
-                            contentDescription = null
-                        )
-                    }
-                }
-            }
-        }
-    }
-
     Button(
         onClick = {
-            onAddAudio(Audio(songName.text, artistName.text, selectedAlbum))
+            onAddAudio(Audio(songName.text, artistName.text, Album("yo", R.drawable.album1)))
             Log.i(TAG, "ADDED")
         }
     ) {

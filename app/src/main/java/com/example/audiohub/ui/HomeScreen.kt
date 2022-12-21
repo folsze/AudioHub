@@ -32,7 +32,7 @@ fun HomeScreen(
             fontSize = 50.sp
         )
 
-        if (atLeastOneAlbumExists) {
+        if (true) {
             Button(
                 onClick = onAddAudioButtonClicked,
             ) {
@@ -40,11 +40,11 @@ fun HomeScreen(
             }
         }
 
-        Button(
-            onClick = onAddAlbumButtonClicked,
-        ) {
-            Text("Add album")
-        }
+//        Button(
+//            onClick = onAddAlbumButtonClicked,
+//        ) {
+//            Text("Add album")
+//        }
 
         Button(
             onClick = onViewAllAudiosButtonClicked,
