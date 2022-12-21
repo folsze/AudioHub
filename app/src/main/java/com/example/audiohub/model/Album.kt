@@ -1,6 +1,8 @@
 package com.example.audiohub.model
 
-data class Album (
-    val name: String,
+import androidx.annotation.DrawableRes
 
+data class Album(
+    val name: String,
+    @DrawableRes val coverImageResourceId: Int
 )
